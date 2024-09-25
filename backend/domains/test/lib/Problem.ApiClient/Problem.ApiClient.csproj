@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<SwaggerJsonApplication>subdir</SwaggerJsonApplication>
+		<OpenApiGenProject>true</OpenApiGenProject>
+	</PropertyGroup>
+
+</Project>

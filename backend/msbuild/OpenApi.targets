@@ -1,0 +1,30 @@
+<Project>
+	<PropertyGroup>
+		<GenDirectory Condition="'$(GenDirectory)' == ''">$(MSBuildProjectDirectory)/Gen</GenDirectory>
+
+		<!-- The location where the open api files will be located. Defaults to root/OpenApi/ -->
+		<SwaggerJsonBaseDirectory Condition="'$(SwaggerJsonDirectory)' == ''">$(MSBuildThisFileDirectory)../../OpenApi/</SwaggerJsonBaseDirectory>
+		<SwaggerJsonApplication>$(SwaggerJsonApplication.TrimEnd('/'))</SwaggerJsonApplication>
+		<SwaggerJsonApplication>$(SwaggerJsonApplication.TrimEnd('\'))</SwaggerJsonApplication>
+		<SwaggerJsonDirectory>$(SwaggerJsonBaseDirectory)$(SwaggerJsonApplication)/</SwaggerJsonDirectory>
+
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(OpenApiGenProject)' == 'true'">
+
+		<SwaggerSource Include="$(GenDirectory)/**/*.nswag" />
+
+		<Swagger Include="@(SwaggerSource)">
+			<Json>$(SwaggerJsonBaseDirectory)$(SwaggerJsonApplication)/%(Swagger.Filename).json</Json>
+		</Swagger>
+
+		<None Include="@(Swagger -> '%(Json)')" Link="Gen/%(Filename)/%(Filename)%(Extension)" UpToDateCheckInput="true" />
+
+	</ItemGroup>
+
+	<Target Name="DebugAppStuff">
+		<Message Importance="High" Text="@(Swagger -> '%(Json)')"/>
+		<Message Importance="High" Text="%(Swagger.Json) did not exist!" Condition="!Exists('%(Swagger.Json)')"/>
+	</Target>
+
+</Project>
